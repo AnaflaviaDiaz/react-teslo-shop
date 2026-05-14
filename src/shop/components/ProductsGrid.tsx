@@ -10,15 +10,17 @@ interface Props {
   products: Product[];
 }
 
+const FILTER_GRID_MODE_PARAM = 'view-mode';
+
 export const ProductsGrid = ({ products }: Props) => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const [showFilters, setShowFilters] = useState(true);
 
-  const viewMode = searchParams.get('viewMode') || 'grid';
+  const viewMode = searchParams.get(FILTER_GRID_MODE_PARAM) || 'grid';
 
   const handleViewModelChange = (mode: 'grid' | 'list') => {
-    searchParams.set('viewMode', mode);
+    searchParams.set(FILTER_GRID_MODE_PARAM, mode);
     setSearchParams(searchParams);
   };
 
@@ -44,6 +46,7 @@ export const ProductsGrid = ({ products }: Props) => {
               Filtros
             </Button>
 
+            {/* botones de cambio de vista de productos */}
             <div className='hidden md:flex border rounded-md'>
               <Button
                 variant={viewMode === 'grid' ? 'default' : 'ghost'}
