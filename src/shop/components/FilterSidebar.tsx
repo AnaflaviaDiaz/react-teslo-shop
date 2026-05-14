@@ -13,10 +13,18 @@ const sizes = [
   { id: 'xxl', label: 'XXL' },
 ];
 
+const FILTER_PAGE_PARAM = 'page';
+const FILTER_SIZES_PARAM = 'sizes';
+const FILTER_PRICE_RANGE_PARAM = 'price-range';
+
 const FilterSidebar = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const currentSizes: string[] = searchParams.get('sizes')?.split('-') || [];
+  const currentSizes: string[] =
+    searchParams.get(FILTER_SIZES_PARAM)?.split('-') || [];
+
+  const currentPriceRange: string =
+    searchParams.get(FILTER_PRICE_RANGE_PARAM) || 'any';
 
   const handleSizeChanged = (size: string) => {
     const newSizes = currentSizes.includes(size)
@@ -24,11 +32,20 @@ const FilterSidebar = () => {
       : [...currentSizes, size];
 
     // con cada cambio de size, debe volver a la página 1
-    searchParams.set('page', '1');
+    searchParams.set(FILTER_PAGE_PARAM, '1');
     // en los parámetros se pone como string
-    searchParams.set('sizes', newSizes.join('-'));
+    searchParams.set(FILTER_SIZES_PARAM, newSizes.join('-'));
 
     setSearchParams(searchParams);
+  };
+
+  const handlePriceRangeChanged = (priceRange: string | null) => {
+    if (priceRange) {
+      // con cada cambio de size, debe volver a la página 1
+      searchParams.set(FILTER_PAGE_PARAM, '1');
+      searchParams.set(FILTER_PRICE_RANGE_PARAM, priceRange);
+      setSearchParams(searchParams);
+    }
   };
 
   return (
@@ -60,7 +77,14 @@ const FilterSidebar = () => {
       {/* Price Range */}
       <div className='space-y-4'>
         <h4 className='font-medium'>Precio</h4>
-        <RadioGroup defaultValue='' className='space-y-3'>
+        <RadioGroup
+          defaultValue=''
+          value={currentPriceRange}
+          onChange={(event) =>
+            handlePriceRangeChanged((event.target as HTMLInputElement).value)
+          }
+          className='space-y-3'
+        >
           <div className='flex items-center space-x-2'>
             <RadioGroupItem value='any' id='priceAny' />
             <Label htmlFor='priceAny' className='text-sm cursor-pointer'>
