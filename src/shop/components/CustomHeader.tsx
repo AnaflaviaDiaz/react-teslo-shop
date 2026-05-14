@@ -1,8 +1,32 @@
+import { useRef, type KeyboardEvent } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { Search, ShoppingBag, Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 
+const FILTER_QUERY_PARAM = 'query';
+
 export const CustomHeader = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const query = searchParams.get(FILTER_QUERY_PARAM) || '';
+
+  // Para no manejar useState, solo usa la referencia para tomar el valor
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  //  solo funcionará con el evento keydown
+  const handleSearch = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (event.key !== 'Enter') return;
+
+    const query = inputRef.current?.value;
+    if (!query) return;
+
+    // se decide por limpiar los demás filtros de talla, precios
+    const newSearchParams = new URLSearchParams();
+    newSearchParams.set(FILTER_QUERY_PARAM, query);
+    setSearchParams(newSearchParams);
+  };
+
   return (
     <header className='sticky top-0 z-50 w-full border-b backdrop-blur bg-slate-50'>
       <div className='container mx-auto px-4 lg:px-8'>
@@ -51,8 +75,11 @@ export const CustomHeader = () => {
               <div className='relative'>
                 <Search className='absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground' />
                 <Input
+                  ref={inputRef}
+                  defaultValue={query}
                   placeholder='Buscar productos...'
-                  className='pl-9 w-64 h-9'
+                  className='pl-9 w-64 h-9 bg-white'
+                  onKeyDown={handleSearch}
                 />
               </div>
             </div>
