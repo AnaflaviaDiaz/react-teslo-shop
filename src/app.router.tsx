@@ -4,12 +4,12 @@ import { createBrowserRouter, Navigate } from 'react-router-dom';
 import { ShopLayout } from './shop/layouts/ShopLayout';
 import { GenderPage } from './shop/pages/gender/GenderPage';
 import { ProductPage } from './shop/pages/product/ProductPage';
-import { ProductPage as AdminProductPage } from './admin/pages/product/ProductPage';
+import { AdminProductPage } from './admin/pages/product/AdminProductPage';
 import { HomePage } from './shop/pages/home/HomePage';
 import { DashboardPage } from './admin/pages/dashboard/DashboardPage';
 import { LoginPage } from './auth/pages/login/LoginPage';
 import { RegisterPage } from './auth/pages/register/RegisterPage';
-import { ProductsPage } from './admin/pages/products/ProductsPage';
+import { AdminProductsPage } from './admin/pages/products/AdminProductsPage';
 
 // Carga perezosa para estos módulos porque el principal es Shop
 // eslint-disable-next-line react-refresh/only-export-components
@@ -70,10 +70,14 @@ export const appRouter = createBrowserRouter([
       },
       {
         path: 'products',
-        element: <ProductsPage />,
+        element: <AdminProductsPage />,
       },
       {
-        path: 'product/:id',
+        path: 'products/:id',
+        element: <AdminProductPage />,
+      },
+      {
+        path: 'products/new',
         element: <AdminProductPage />,
       },
     ],
@@ -82,6 +86,6 @@ export const appRouter = createBrowserRouter([
   // cualquier ruta no registrada, redirige a shopLayout
   {
     path: '*',
-    element: <Navigate to='/' />
-  }
+    element: <Navigate to='/' />,
+  },
 ]);

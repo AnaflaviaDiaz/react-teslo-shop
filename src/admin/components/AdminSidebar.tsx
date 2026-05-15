@@ -36,7 +36,7 @@ export const AdminSidebar: React.FC<SidebarProps> = ({
   ];
 
   const isActiveRoute = (to: string) => {
-    return pathname === to;
+    return pathname === to || (pathname.includes(to) && to !== '/admin');
   };
 
   return (
